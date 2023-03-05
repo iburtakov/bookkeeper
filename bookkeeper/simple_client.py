@@ -4,11 +4,13 @@
 
 from bookkeeper.models.category import Category
 from bookkeeper.models.expense import Expense
+from bookkeeper.models.budget import Budget
 from bookkeeper.repository.memory_repository import MemoryRepository
 from bookkeeper.utils import read_tree
 
 cat_repo = MemoryRepository[Category]()
 exp_repo = MemoryRepository[Expense]()
+budget_repo = MemoryRepository[Budget]()
 
 cats = '''
 продукты
@@ -22,6 +24,13 @@ cats = '''
 
 Category.create_from_tree(read_tree(cats), cat_repo)
 
+budget = Budget(period="day", limitation=1000, spent=0)
+budget_repo.add(budget)
+budget = Budget(period="week", limitation=7000, spent=0)
+budget_repo.add(budget)
+budget = Budget(period="month", limitation=30000, spent=0)
+budget_repo.add(budget)
+
 while True:
     try:
         cmd = input('$> ')
@@ -31,6 +40,8 @@ while True:
         continue
     if cmd == 'категории':
         print(*cat_repo.get_all(), sep='\n')
+    elif cmd == 'бюджет':
+        print(*budget_repo.get_all(), sep='\n')
     elif cmd == 'расходы':
         print(*exp_repo.get_all(), sep='\n')
     elif cmd[0].isdecimal():
@@ -43,3 +54,6 @@ while True:
         exp = Expense(int(amount), cat.pk)
         exp_repo.add(exp)
         print(exp)
+        for budget in budget_repo.get_all():
+            budget.update_spent(exp_repo)
+            budget_repo.update(budget)
