@@ -55,9 +55,7 @@ def test_crud(repo, custom_class):
     obj_upd = custom_class(f1=11, f2="test_crud_upd", pk=pk)
     repo.update(obj_upd)
     obj_get = repo.get(pk)
-    assert obj_get.pk == obj_upd.pk
-    assert obj_get.f1 == obj_upd.f1
-    assert obj_get.f2 == obj_upd.f2
+    assert obj_get == obj_upd
     # delete
     repo.delete(pk)
     assert repo.get(pk) is None
@@ -84,3 +82,41 @@ def test_cannot_update_without_pk(repo, custom_class):
     obj = custom_class(f1=1, pk=0)
     with pytest.raises(ValueError):
         repo.update(obj)
+
+
+def test_get_unexistent(repo):
+    assert repo.get(-1) is None
+
+
+def test_cannot_delete_unexistent(repo):
+    with pytest.raises(ValueError):
+        repo.delete(-1)
+
+
+def test_get_all(repo, custom_class):
+    objects = [custom_class(f1=1) for i in range(5)]
+    for o in objects:
+        repo.add(o)
+    assert objects == repo.get_all()
+
+def test_get_all_with_condition(repo, custom_class):
+    objects = []
+    for i in range(5):
+        o = custom_class(f1=1)
+        o.f1 = i
+        o.f2 = 'test'
+        repo.add(o)
+        objects.append(o)
+    assert [objects[0]] == repo.get_all({'f1': 0})
+    assert objects == repo.get_all({'f2': 'test'})
+
+def test_get_all_like(repo, custom_class):
+    objects = []
+    for i in range(5):
+        o = custom_class(f1=1)
+        o.f1 = "__" + str(i) + "__"
+        o.f2 = 'test'
+        repo.add(o)
+        objects.append(o)
+    assert [objects[0]] == repo.get_all_like({'f1': '0'})
+    assert objects == repo.get_all_like({'f2': 'test'})

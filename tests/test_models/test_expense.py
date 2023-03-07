@@ -27,4 +27,4 @@ def test_create_brief():
 def test_can_add_to_repo(repo):
     e = Expense(100, 1)
     pk = repo.add(e)
-    assert e.pk == pk
+    assert e.pk == 
