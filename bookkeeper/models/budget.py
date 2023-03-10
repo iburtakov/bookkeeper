@@ -30,9 +30,6 @@ class Budget:
         self.spent = spent
         self.pk = pk
 
-    def set_limit(self, limitation: int) -> None:
-        self.limitation = limitation
-
     def update_spent(self, exp_repo: AbstractRepository[Expense]) -> None:
         date = datetime.now().isoformat()[:10] # YYYY-MM-DD format
         if self.period.lower() == "day":
