@@ -4,7 +4,7 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
-from ..repository.abstract_repository import AbstractRepository
+from bookkeeper.repository.abstract_repository import AbstractRepository
 from bookkeeper.models.expense import Expense
 
 

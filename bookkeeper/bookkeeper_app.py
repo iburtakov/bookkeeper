@@ -105,7 +105,7 @@ class Bookkeeper:
         if len([b for b in self.budgets if b.spent > b.limitation]):
             self.view.death()
 
-    def modify_expense(self, pk, attr, new_val):
+    def modify_expense(self, pk: int, attr: str, new_val: str):
         exp = self.expense_rep.get(pk)
         if attr == "category":
             new_val = new_val.lower()
@@ -147,8 +147,9 @@ class Bookkeeper:
 
 
     def modify_budget(self, pk: int | None, new_limit: str, period: str):
-        if new_limit == "" and pk is not None:
-            self.budget_rep.delete(pk)
+        if new_limit == "":
+            if pk is not None:
+                self.budget_rep.delete(pk)
             self.update_budgets()
             return
         try:
