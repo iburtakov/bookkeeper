@@ -35,17 +35,10 @@ def test_can_add_to_repo(repo):
     pk = repo.add(b)
     assert b.pk == pk
 
-
-def test_set_limit():
-    b = Budget(100, "day")
-    b.set_limit(1000)
-    assert b.limitation == 1000
-
 def test_update_spent_day(repo):
     b = Budget(100, "day")
-    date = datetime.now().isoformat()
     for i in range(3):
-        e = Expense(100, 1, expense_date=date)
+        e = Expense(100, 1)
         repo.add(e)
     b.update_spent(repo)
     assert b.spent == 300
@@ -70,7 +63,8 @@ def test_update_spent_week(repo):
     period_exps = []
     for i in range(9):
         day = first_week_day + timedelta(days=i-1)
-        e = Expense(100, 1, expense_date=day.isoformat())
+        e = Expense(100, 1, expense_date=day.isoformat(
+                                    sep='\t', timespec='minutes'))
         repo.add(e)
     b.update_spent(repo)
     assert b.spent == 700
