@@ -27,7 +27,7 @@ class ExpensesTableWidget(QtWidgets.QTableWidget):
         self.cellDoubleClicked.connect(self.double_click)
         #self.verticalHeader().hide()
 
-    def double_click(self, row, columns):
+    def double_click(self, row: int, columns: int) -> None:
         self.cellChanged.connect(self.cell_changed)
 
     def cell_changed(self, row, column):
