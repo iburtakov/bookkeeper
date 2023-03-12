@@ -42,7 +42,7 @@ class CategoriesEditWindow(QtWidgets.QWidget):
     def set_categories(self, cats: list[Category]):
         self.categories = cats
         self.cat_names = [c.name for c in cats]
-        top_items = self.find_children()
+        top_items = self._find_children()
         self.cats_tree.clear()
         self.cats_tree.insertTopLevelItems(0, top_items)
         self.cat_del.set_items(self.cat_names)
@@ -50,10 +50,8 @@ class CategoriesEditWindow(QtWidgets.QWidget):
                                                         + self.cat_names)
 
     def delete_category(self):
-        #print(f"Категория {self.cat_del.text()} удалена")
         self.cat_deleter(self.cat_del.text())
         self.cat_del.clear()
-        # todo: upd cat tree view
 
     def set_cat_checker(self, checker):
         self.cat_checker = checker
@@ -62,22 +60,18 @@ class CategoriesEditWindow(QtWidgets.QWidget):
         parent_name = self.cat_add_parent.text()
         if parent_name == "- Без родительской категории -":
             self.cat_adder(self.cat_add_name.text(), None)
-            #print(f"Категория '{self.cat_add_name.text()}' добавлена")
         else:
             self.cat_checker(parent_name)
             self.cat_adder(self.cat_add_name.text().lower(), self.cat_add_parent.text())
-            # print(f"Подкатегория '{self.cat_add_name.text()}' категории" 
-            #       + f"'{self.cat_add_parent.text()}' добавлена")
         self.cat_add_name.clear()
         self.cat_add_parent.clear()
-        # todo: upd cat tree view
     
-    def find_children(self, parent_pk=None):
+    def _find_children(self, parent_pk=None):
         items = []
         children = [c for c in self.categories if c.parent == parent_pk]
         for child in children:
             item = QtWidgets.QTreeWidgetItem([child.name])
-            item.addChildren(self.find_children(parent_pk=child.pk))
+            item.addChildren(self._find_children(parent_pk=child.pk))
             items.append(item)
         return items
         

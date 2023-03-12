@@ -21,18 +21,16 @@ class MainWindow(QtWidgets.QWidget):
         #                             init_state=Qt.Checked, 
         #                             chstate_func=self.change_theme)
         #self.vbox.addWidget(self.theme, stretch=0.1, alignment=Qt.AlignRight)
-
-        # Расходы
-        self.expenses_table = expenses_table
-        self.vbox.addWidget(self.expenses_table, stretch=6)
-        self.setLayout(self.vbox)
         # Бюджет
         self.budget_table = budget_table
         self.vbox.addWidget(self.budget_table, stretch=3)
         # Новая трата
         self.new_expense = new_expense
         self.vbox.addWidget(self.new_expense, stretch=1)
-
+        # Расходы
+        self.expenses_table = expenses_table
+        self.vbox.addWidget(self.expenses_table, stretch=6)
+        self.setLayout(self.vbox)
 
     def change_theme(self, status):
         app = QtWidgets.QApplication.instance()
